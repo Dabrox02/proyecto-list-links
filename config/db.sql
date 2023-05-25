@@ -10,7 +10,7 @@ CREATE TABLE users(
 );
 
 ALTER TABLE users ADD PRIMARY KEY(id_user);
-ALTER TABLE users MODIFY id_user INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE users MODIFY id_user INT(11) NOT NULL;
 
 DESCRIBE users;
 
@@ -26,4 +26,38 @@ CREATE TABLE links(
 );
 
 ALTER TABLE links ADD PRIMARY KEY(id_link);
-ALTER TABLE links MODIFY id_link INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE links MODIFY id_link INT(11) NOT NULL;
+
+
+-- TRIGGER 
+DROP TRIGGER IF EXISTS check_id_links_before_insert;
+
+DELIMITER //
+CREATE TRIGGER check_id_links_before_insert
+BEFORE INSERT
+ON db_links.links
+FOR EACH ROW
+BEGIN
+	DECLARE max_id INT;
+    DECLARE id_search INT;
+	DECLARE cont INT;
+	SET cont = 0;
+    SET max_id = (SELECT MAX(id_link) FROM db_links.links);
+    WHILE cont < max_id DO
+        SET cont = cont + 1;
+        SELECT COUNT(*) INTO id_search FROM db_links.links WHERE db_links.links.id_link = cont;
+  		IF id_search = 0 THEN
+        	SET NEW.id_link = cont;
+        END IF;
+    END WHILE;
+    
+    IF cont = max_id THEN
+    	SET NEW.id_link = max_id + 1;
+    END IF;
+    
+END// 
+DELIMITER ;
+
+-- PRUEBA
+-- INSERT INTO links (id_link, title, url, description) VALUES (1, "TITULO", "link:http", "DESCRIP");
+
