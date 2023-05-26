@@ -15,9 +15,19 @@
                 No descripcion
               {{/if}}</p>
             <p>{{timeago created_at}}</p>
-            <a href="/links/delete/{{id_link}}" class="btn btn-danger">Eliminar</a>
-            <a href="" class="btn btn-warning">Editar</a>
+            <a
+              href="/links/delete/{{id_link}}"
+              class="btn btn-danger"
+            >Eliminar</a>
+            <a href="/links/edit/{{id_link}}" class="btn btn-warning">Editar</a>
           </div>
+        </div>
+      </div>
+    {{else}}
+      <div class="col-md-4 mx-auto">
+        <div class="card card-body text-center">
+          <p>No hay links guardados ahora</p>
+          <a href="/links/add">Crea uno ahora!</a>
         </div>
       </div>
     {{/each}}

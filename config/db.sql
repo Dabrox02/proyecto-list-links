@@ -30,6 +30,7 @@ ALTER TABLE links MODIFY id_link INT(11) NOT NULL;
 
 
 -- TRIGGER 
+-- TRIGGER 
 DROP TRIGGER IF EXISTS check_id_links_before_insert;
 
 DELIMITER //
@@ -48,13 +49,13 @@ BEGIN
         SELECT COUNT(*) INTO id_search FROM db_links.links WHERE db_links.links.id_link = cont;
   		IF id_search = 0 THEN
         	SET NEW.id_link = cont;
+        ELSE
+        	SET NEW.id_link = max_id + 1;
         END IF;
     END WHILE;
-    
-    IF cont = max_id THEN
-    	SET NEW.id_link = max_id + 1;
+    IF max_id = 0 THEN
+    	SET NEW.id_link = 1;
     END IF;
-    
 END// 
 DELIMITER ;
 
